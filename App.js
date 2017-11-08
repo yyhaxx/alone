@@ -1,57 +1,73 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+import React, { Component } from "react";
+import { Text, AppRegistry, Image, View, StyleSheet } from "react-native";
 
-import React, { Component } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
-export default class App extends Component<{}> {
+export default class App extends Component {
   render() {
+    let pic = {
+      uri: 'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png'
+    }
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
+      // <Text>Helle Word</Text> 
+      <View style={{flex: 1}}>
+        <Image source={pic} style={{width: 193, height: 110}} />
+        <Greeting name="xiaoxi"></Greeting>
+        <Blink text="污污污污污污污污污污污污～"/>
+        <Text style={styles.red}>1</Text>
+        <View style={{flex: 1, flexDirection: 'column'}}>
+          <View style={{flex: 1, backgroundColor: 'powderblue'}}/>
+          <View style={{flex: 2, backgroundColor: 'skyblue'}}/>
+          <View style={{flex: 3, backgroundColor: 'steelblue'}}/>
+        </View>
+        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{width: 50, height: 50, backgroundColor: 'powderblue'}}/>
+          <View style={{width: 50, height: 50, backgroundColor: 'skyblue'}}/>
+          <View style={{width: 50, height: 50, backgroundColor: 'steelblue'}}/>
+        </View>
       </View>
     );
   }
 }
 
+class Greeting extends Component {
+  render() {
+    return (
+      <Text style={{backgroundColor: 'skyblue'}}>污污污污污污污污污污污污～</Text>
+    );
+  }
+}
+
+class Blink extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showText: true
+    };
+    setInterval(() => {
+      this.setState(previousState => {
+        return {
+          showText: !previousState.showText
+        }
+      })
+    }, 100)
+  }
+  
+  render() {
+    let display = this.state.showText ? this.props.text : ' ';    
+    return (
+      <Text>{display}</Text>
+    );
+  }
+}
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+  bigblue: {
+    color: 'blue',
+    fontWeight: 'bold',
+    fontSize: 30,
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+  red: {
+    color: 'red',
+  }
+})
+
+AppRegistry.registerComponent('App', () => App)
