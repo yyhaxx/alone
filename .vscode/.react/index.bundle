@@ -51920,92 +51920,143 @@ function _wrapComponent(id) {
 var App = _wrapComponent("App")(function (_Component) {
   _inherits(App, _Component);
 
-  function App() {
+  function App(props) {
     _classCallCheck(this, App);
 
-    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+
+    _this.state = {
+      text: ''
+    };
+    return _this;
   }
 
   _createClass(App, [{
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       var pic = {
         uri: 'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png'
+      };
+      var pic1 = {
+        uri: 'https://timgmb03.bdimg.com/timg?searchbox_feed&sec=0&di=cc3d75a2cd0755bcd24faafc480744a0&src=http%3A%2F%2Ftimg01.baidu-2img.cn%2Ftimg%3Fpa%26Imgtype%3D0%26sec%3D1439619614%26di%3De1384486ba254f3caae522ad809aa30e%26quality%3D90%26size%3Db870_10000%26src%3Dhttp%3A%2F%2Fbos.nj.bpc.baidu.com%2Fv1%2Fmediaspot%2F52495dca675df719706a8bb886038501.jpeg'
       };
       return _react3.default.createElement(
         _reactNative.View,
         { style: { flex: 1 }, __source: {
             fileName: _jsxFileName,
-            lineNumber: 11
+            lineNumber: 19
           }
         },
-        _react3.default.createElement(_reactNative.Image, { source: pic, style: { width: 193, height: 110 }, __source: {
+        _react3.default.createElement(_reactNative.Image, { source: pic, style: { width: 193, height: 110, marginLeft: 'auto', marginRight: 'auto' }, __source: {
             fileName: _jsxFileName,
-            lineNumber: 12
-          }
-        }),
-        _react3.default.createElement(Greeting, { name: "xiaoxi", __source: {
-            fileName: _jsxFileName,
-            lineNumber: 13
-          }
-        }),
-        _react3.default.createElement(Blink, { text: "\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\uFF5E", __source: {
-            fileName: _jsxFileName,
-            lineNumber: 14
+            lineNumber: 20
           }
         }),
         _react3.default.createElement(
-          _reactNative.Text,
-          { style: styles.red, __source: {
+          _reactNative.View,
+          { style: { padding: 10 }, __source: {
               fileName: _jsxFileName,
-              lineNumber: 15
+              lineNumber: 21
             }
           },
-          "1"
+          _react3.default.createElement(_reactNative.TextInput, { style: { height: 40, borderColor: '#eee', borderWidth: 1 }, placeholder: "", onChangeText: function onChangeText(text) {
+              return _this2.setState({ text: text });
+            }, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 22
+            }
+          }),
+          _react3.default.createElement(
+            _reactNative.Text,
+            { style: { padding: 10, fontSize: 40 }, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 23
+              }
+            },
+            this.state.text.split('').map(function (word) {
+              return word && '🌹';
+            }).join(' ')
+          )
         ),
         _react3.default.createElement(
           _reactNative.View,
-          { style: { flex: 1, flexDirection: 'column' }, __source: {
+          { style: styles.container, __source: {
               fileName: _jsxFileName,
-              lineNumber: 16
+              lineNumber: 27
             }
           },
-          _react3.default.createElement(_reactNative.View, { style: { flex: 1, backgroundColor: 'powderblue' }, __source: {
+          _react3.default.createElement(_reactNative.FlatList, {
+            data: [{ key: 'a' }, { key: 'b' }, { key: 'c' }, { key: 'd' }, { key: 'e' }, { key: 'f' }],
+            renderItem: function renderItem(_ref) {
+              var item = _ref.item;
+              return _react3.default.createElement(
+                _reactNative.Text,
+                { style: styles.item, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 37
+                  }
+                },
+                item.key
+              );
+            },
+            __source: {
               fileName: _jsxFileName,
-              lineNumber: 17
-            }
-          }),
-          _react3.default.createElement(_reactNative.View, { style: { flex: 2, backgroundColor: 'skyblue' }, __source: {
-              fileName: _jsxFileName,
-              lineNumber: 18
-            }
-          }),
-          _react3.default.createElement(_reactNative.View, { style: { flex: 3, backgroundColor: 'steelblue' }, __source: {
-              fileName: _jsxFileName,
-              lineNumber: 19
+              lineNumber: 28
             }
           })
         ),
         _react3.default.createElement(
           _reactNative.View,
-          { style: { flex: 1, flexDirection: 'row', justifyContent: 'space-between' }, __source: {
+          { style: styles.container, __source: {
               fileName: _jsxFileName,
-              lineNumber: 21
+              lineNumber: 40
             }
           },
-          _react3.default.createElement(_reactNative.View, { style: { width: 50, height: 50, backgroundColor: 'powderblue' }, __source: {
+          _react3.default.createElement(_reactNative.SectionList, {
+            sections: [{ title: 'D', data: ['Devin'] }, { title: 'J', data: ['Jackson', 'James', 'Jillian', 'Joel', 'Julie'] }],
+            renderItem: function renderItem(_ref2) {
+              var item = _ref2.item;
+              return _react3.default.createElement(
+                _reactNative.Text,
+                { style: styles.item, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 46
+                  }
+                },
+                item
+              );
+            },
+            renderSectionHeader: function renderSectionHeader(_ref3) {
+              var section = _ref3.section;
+              return _react3.default.createElement(
+                _reactNative.Text,
+                { style: styles.sectionHeader, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 47
+                  }
+                },
+                section.title
+              );
+            },
+            __source: {
               fileName: _jsxFileName,
-              lineNumber: 22
+              lineNumber: 41
             }
-          }),
-          _react3.default.createElement(_reactNative.View, { style: { width: 50, height: 50, backgroundColor: 'skyblue' }, __source: {
+          })
+        ),
+        _react3.default.createElement(
+          _reactNative.ScrollView,
+          {
+            __source: {
               fileName: _jsxFileName,
-              lineNumber: 23
+              lineNumber: 50
             }
-          }),
-          _react3.default.createElement(_reactNative.View, { style: { width: 50, height: 50, backgroundColor: 'steelblue' }, __source: {
+          },
+          _react3.default.createElement(_reactNative.Image, { source: pic1, style: { width: 193, height: 110, marginLeft: 'auto', marginRight: 'auto' }, __source: {
               fileName: _jsxFileName,
-              lineNumber: 24
+              lineNumber: 51
             }
           })
         )
@@ -52034,7 +52085,7 @@ var Greeting = _wrapComponent("Greeting")(function (_Component2) {
         _reactNative.Text,
         { style: { backgroundColor: 'skyblue' }, __source: {
             fileName: _jsxFileName,
-            lineNumber: 34
+            lineNumber: 61
           }
         },
         "\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\uFF5E"
@@ -52051,19 +52102,19 @@ var Blink = _wrapComponent("Blink")(function (_Component3) {
   function Blink(props) {
     _classCallCheck(this, Blink);
 
-    var _this3 = _possibleConstructorReturn(this, (Blink.__proto__ || Object.getPrototypeOf(Blink)).call(this, props));
+    var _this4 = _possibleConstructorReturn(this, (Blink.__proto__ || Object.getPrototypeOf(Blink)).call(this, props));
 
-    _this3.state = {
+    _this4.state = {
       showText: true
     };
     setInterval(function () {
-      _this3.setState(function (previousState) {
+      _this4.setState(function (previousState) {
         return {
           showText: !previousState.showText
         };
       });
     }, 100);
-    return _this3;
+    return _this4;
   }
 
   _createClass(Blink, [{
@@ -52075,7 +52126,7 @@ var Blink = _wrapComponent("Blink")(function (_Component3) {
         {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 57
+            lineNumber: 84
           }
         },
         display
@@ -52094,6 +52145,24 @@ var styles = _reactNative.StyleSheet.create({
   },
   red: {
     color: 'red'
+  },
+  container: {
+    flex: 1,
+    marginBottom: 10
+  },
+  sectionHeader: {
+    paddingTop: 2,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 2,
+    fontSize: 14,
+    fontWeight: 'bold',
+    backgroundColor: 'rgba(247,247,247,1.0)'
+  },
+  item: {
+    padding: 10,
+    fontSize: 18,
+    height: 44
   }
 });
 
