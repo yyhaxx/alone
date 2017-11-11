@@ -51878,9 +51878,9 @@ var _index = require(127                                              ); // 127 
 
 var _index2 = _interopRequireDefault(_index);
 
-var _jsxFileName = "/Volumes/D/code/alone/App.js";
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jsxFileName = '/Volumes/D/code/alone/App.js';
 
 var _reactNative = require(12            ); // 12 = react-native
 
@@ -51894,18 +51894,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var _components = {
   App: {
-    displayName: "App"
-  },
-  Greeting: {
-    displayName: "Greeting"
-  },
-  Blink: {
-    displayName: "Blink"
+    displayName: 'App'
   }
 };
 
 var _node_modulesReactTransformHmrLibIndexJs2 = (0, _index2.default)({
-  filename: "/Volumes/D/code/alone/App.js",
+  filename: '/Volumes/D/code/alone/App.js',
   components: _components,
   locals: [module],
   imports: [_react3.default]
@@ -51917,7 +51911,18 @@ function _wrapComponent(id) {
   };
 }
 
-var App = _wrapComponent("App")(function (_Component) {
+var element = _react3.default.createElement(
+  'h1',
+  {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 5
+    }
+  },
+  'Hello'
+);
+
+var App = _wrapComponent('App')(function (_Component) {
   _inherits(App, _Component);
 
   function App(props) {
@@ -51926,141 +51931,108 @@ var App = _wrapComponent("App")(function (_Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.state = {
-      text: ''
+      goddess: 'xiaoxi'
     };
+
+    _this.state = { time: 0 };
     return _this;
   }
 
   _createClass(App, [{
-    key: "render",
+    key: 'timesPuls',
+    value: function timesPuls() {
+      var times = this.state.time;
+      times++;
+      this.setState({
+        time: times
+      });
+    }
+  }, {
+    key: 'componendstWillMount',
+    value: function componendstWillMount() {
+      console.log('componendstWillMount');
+    }
+  }, {
+    key: 'componendstDidMount',
+    value: function componendstDidMount() {
+      console.log('componendstDidMount');
+    }
+  }, {
+    key: 'render',
     value: function render() {
-      var _this2 = this;
-
-      var pic = {
-        uri: 'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png'
-      };
-      var pic1 = {
-        uri: 'https://timgmb03.bdimg.com/timg?searchbox_feed&sec=0&di=cc3d75a2cd0755bcd24faafc480744a0&src=http%3A%2F%2Ftimg01.baidu-2img.cn%2Ftimg%3Fpa%26Imgtype%3D0%26sec%3D1439619614%26di%3De1384486ba254f3caae522ad809aa30e%26quality%3D90%26size%3Db870_10000%26src%3Dhttp%3A%2F%2Fbos.nj.bpc.baidu.com%2Fv1%2Fmediaspot%2F52495dca675df719706a8bb886038501.jpeg'
-      };
       return _react3.default.createElement(
         _reactNative.View,
-        { style: { flex: 1 }, __source: {
+        { style: { marginTop: 40 }, __source: {
             fileName: _jsxFileName,
-            lineNumber: 19
+            lineNumber: 37
           }
         },
-        _react3.default.createElement(_reactNative.Image, { source: pic, style: { width: 193, height: 110, marginLeft: 'auto', marginRight: 'auto' }, __source: {
-            fileName: _jsxFileName,
-            lineNumber: 20
-          }
-        }),
         _react3.default.createElement(
           _reactNative.View,
-          { style: { padding: 10 }, __source: {
+          {
+            __source: {
               fileName: _jsxFileName,
-              lineNumber: 21
+              lineNumber: 38
             }
           },
-          _react3.default.createElement(_reactNative.TextInput, { style: { height: 40, borderColor: '#eee', borderWidth: 1 }, placeholder: "", onChangeText: function onChangeText(text) {
-              return _this2.setState({ text: text });
-            }, __source: {
-              fileName: _jsxFileName,
-              lineNumber: 22
-            }
-          }),
           _react3.default.createElement(
             _reactNative.Text,
-            { style: { padding: 10, fontSize: 40 }, __source: {
+            {
+              __source: {
                 fileName: _jsxFileName,
-                lineNumber: 23
+                lineNumber: 39
               }
             },
-            this.state.text.split('').map(function (word) {
-              return word && '🌹';
-            }).join(' ')
+            ' Hello world!a '
           )
         ),
         _react3.default.createElement(
           _reactNative.View,
-          { style: styles.container, __source: {
-              fileName: _jsxFileName,
-              lineNumber: 27
-            }
-          },
-          _react3.default.createElement(_reactNative.FlatList, {
-            data: [{ key: 'a' }, { key: 'b' }, { key: 'c' }, { key: 'd' }, { key: 'e' }, { key: 'f' }],
-            renderItem: function renderItem(_ref) {
-              var item = _ref.item;
-              return _react3.default.createElement(
-                _reactNative.Text,
-                { style: styles.item, __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 37
-                  }
-                },
-                item.key
-              );
-            },
-            __source: {
-              fileName: _jsxFileName,
-              lineNumber: 28
-            }
-          })
-        ),
-        _react3.default.createElement(
-          _reactNative.View,
-          { style: styles.container, __source: {
-              fileName: _jsxFileName,
-              lineNumber: 40
-            }
-          },
-          _react3.default.createElement(_reactNative.SectionList, {
-            sections: [{ title: 'D', data: ['Devin'] }, { title: 'J', data: ['Jackson', 'James', 'Jillian', 'Joel', 'Julie'] }],
-            renderItem: function renderItem(_ref2) {
-              var item = _ref2.item;
-              return _react3.default.createElement(
-                _reactNative.Text,
-                { style: styles.item, __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 46
-                  }
-                },
-                item
-              );
-            },
-            renderSectionHeader: function renderSectionHeader(_ref3) {
-              var section = _ref3.section;
-              return _react3.default.createElement(
-                _reactNative.Text,
-                { style: styles.sectionHeader, __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 47
-                  }
-                },
-                section.title
-              );
-            },
+          {
             __source: {
               fileName: _jsxFileName,
               lineNumber: 41
             }
-          })
-        ),
-        _react3.default.createElement(
-          _reactNative.ScrollView,
-          {
-            __source: {
-              fileName: _jsxFileName,
-              lineNumber: 50
-            }
           },
-          _react3.default.createElement(_reactNative.Image, { source: pic1, style: { width: 193, height: 110, marginLeft: 'auto', marginRight: 'auto' }, __source: {
-              fileName: _jsxFileName,
-              lineNumber: 51
-            }
-          })
+          _react3.default.createElement(
+            _reactNative.Text,
+            { onPress: this.timesPuls.bind(this), __source: {
+                fileName: _jsxFileName,
+                lineNumber: 42
+              }
+            },
+            ' \u70B9\u6211 '
+          ),
+          _react3.default.createElement(
+            _reactNative.Text,
+            {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 43
+              }
+            },
+            ' \u4F60\u70B9\u4E86\u6211 ',
+            this.state.time,
+            ' '
+          )
         )
       );
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate() {
+      console.log('shouldComponentUpdate');
+      return true;
+    }
+  }, {
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate() {
+      console.log('componentWillUpdate');
+    }
+  }, {
+    key: 'componendstDidUpdate',
+    value: function componendstDidUpdate() {
+      console.log('componendstDidUpdate');
     }
   }]);
 
@@ -52068,107 +52040,6 @@ var App = _wrapComponent("App")(function (_Component) {
 }(_react2.Component));
 
 exports.default = App;
-
-var Greeting = _wrapComponent("Greeting")(function (_Component2) {
-  _inherits(Greeting, _Component2);
-
-  function Greeting() {
-    _classCallCheck(this, Greeting);
-
-    return _possibleConstructorReturn(this, (Greeting.__proto__ || Object.getPrototypeOf(Greeting)).apply(this, arguments));
-  }
-
-  _createClass(Greeting, [{
-    key: "render",
-    value: function render() {
-      return _react3.default.createElement(
-        _reactNative.Text,
-        { style: { backgroundColor: 'skyblue' }, __source: {
-            fileName: _jsxFileName,
-            lineNumber: 61
-          }
-        },
-        "\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\u6C61\uFF5E"
-      );
-    }
-  }]);
-
-  return Greeting;
-}(_react2.Component));
-
-var Blink = _wrapComponent("Blink")(function (_Component3) {
-  _inherits(Blink, _Component3);
-
-  function Blink(props) {
-    _classCallCheck(this, Blink);
-
-    var _this4 = _possibleConstructorReturn(this, (Blink.__proto__ || Object.getPrototypeOf(Blink)).call(this, props));
-
-    _this4.state = {
-      showText: true
-    };
-    setInterval(function () {
-      _this4.setState(function (previousState) {
-        return {
-          showText: !previousState.showText
-        };
-      });
-    }, 100);
-    return _this4;
-  }
-
-  _createClass(Blink, [{
-    key: "render",
-    value: function render() {
-      var display = this.state.showText ? this.props.text : ' ';
-      return _react3.default.createElement(
-        _reactNative.Text,
-        {
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 84
-          }
-        },
-        display
-      );
-    }
-  }]);
-
-  return Blink;
-}(_react2.Component));
-
-var styles = _reactNative.StyleSheet.create({
-  bigblue: {
-    color: 'blue',
-    fontWeight: 'bold',
-    fontSize: 30
-  },
-  red: {
-    color: 'red'
-  },
-  container: {
-    flex: 1,
-    marginBottom: 10
-  },
-  sectionHeader: {
-    paddingTop: 2,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 2,
-    fontSize: 14,
-    fontWeight: 'bold',
-    backgroundColor: 'rgba(247,247,247,1.0)'
-  },
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 44
-  }
-});
-
-_reactNative.AppRegistry.registerComponent('App', function () {
-  return App;
-});
 }, 488, null, "alone/App.js");
 ;require(50);
 ;require(0);
