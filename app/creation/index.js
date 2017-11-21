@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, ListView, TouchableHighlight, Image, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import request from '../common/fetch'
+import Config from "../common/config";
 
 let width = Dimensions.get('window').width
 
@@ -16,16 +18,7 @@ class List extends Component {
       }
     })
     this.state = {
-      dataSource: ds.cloneWithRows([{
-        "id":"520000198105183420",
-        'title': '测试内容1l7j"',
-        "thumb":"https://dummyimage.com/1200x600/336d66","video":"http://112.25.17.244/youku/6775ABB2FDE4E79779E37512C/03000801005A0A281A62762AA6547A150743CC-B9B4-77C0-F149-D40AC28BFE3B.mp4?sid=051123041444412626ad2&ctype=12&ccode=050F&duration=387&expire=18000&psid=a34b1d65bea52d89fb6a5c6fc9b5c95a&ups_client_netip=df55cb84&ups_ts=1511230414&ups_userid=&utid=QsL5EWbg2yUCAWXM2DIfemsi&vid=XMzE1NDk5MDQyNA%3D%3D&vkey=A9d55e5640f1416dab12ff592a9fa9df0"
-      },
-      {
-        "id":"110000198512045600",
-        'title': '测试内容1l7j"',
-        "thumb":"https://dummyimage.com/1200x600/e15e26","video":"http://112.25.17.244/youku/6775ABB2FDE4E79779E37512C/03000801005A0A281A62762AA6547A150743CC-B9B4-77C0-F149-D40AC28BFE3B.mp4?sid=051123041444412626ad2&ctype=12&ccode=050F&duration=387&expire=18000&psid=a34b1d65bea52d89fb6a5c6fc9b5c95a&ups_client_netip=df55cb84&ups_ts=1511230414&ups_userid=&utid=QsL5EWbg2yUCAWXM2DIfemsi&vid=XMzE1NDk5MDQyNA%3D%3D&vkey=A9d55e5640f1416dab12ff592a9fa9df0"
-      }])
+      dataSource: ds.cloneWithRows([])
     }
   }
 
@@ -70,6 +63,21 @@ class List extends Component {
     )
   }
 
+  componentDidMount(){
+    this._fetchData()
+  }
+
+  _fetchData(){
+    request.get(`${Config.api.base}${Config.api.creations}`, {
+      accessToken: 'aaa'
+    }).then(data => {
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(data.data)
+      }) 
+    })
+
+
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -122,7 +130,7 @@ const styles = StyleSheet.create({
   itemFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#222'
+    backgroundColor: '#bbb'
   },
   handleBox: {
     padding: 10,
