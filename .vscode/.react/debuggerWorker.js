@@ -39,6 +39,11 @@ process.on("message", function (message) {
 var postMessage = function(message){
     process.send(message);
 };
+
+if (!self.postMessage) {
+    self.postMessage = postMessage;
+}
+
 var importScripts = (function(){
     var fs=require('fs'), vm=require('vm');
     return function(scriptUrl){
@@ -46,6 +51,7 @@ var importScripts = (function(){
         vm.runInThisContext(scriptCode, {filename: scriptUrl});
     };
 })();
+
 /**
  * Copyright (c) 2015-present, Facebook, Inc.
  * All rights reserved.
