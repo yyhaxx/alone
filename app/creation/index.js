@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ListView, TouchableHighlight, Image, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ListView, TouchableHighlight, Image, Dimensions, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import request from '../common/fetch'
 import Config from "../common/config";
+import { setTimeout } from 'core-js/library/web/timers';
 
 let width = Dimensions.get('window').width
+let cachedRes = {
+  nextPage: 1,
+  items: [],
+  total: 0
+}
 
 class List extends Component {
 
@@ -12,17 +18,20 @@ class List extends Component {
 
   constructor(props){
     super(props)
+    this._fetchMoreData = this._fetchMoreData.bind(this)
+    this._renderFooter = this._renderFooter.bind(this)
     let ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => {
         return r1 != r2
       }
     })
     this.state = {
-      dataSource: ds.cloneWithRows([])
+      dataSource: ds.cloneWithRows([]),
+      isLoadingTail: false,
     }
   }
 
-  renderRow(row){
+  _renderRow(row){
     return(
       <TouchableHighlight>
         <View style={styles.item}>
@@ -64,20 +73,65 @@ class List extends Component {
   }
 
   componentDidMount(){
-    this._fetchData()
+    this._fetchData(1)
   }
 
-  _fetchData(){
-    request.get(`${Config.api.base}${Config.api.creations}`, {
-      accessToken: 'aaa'
-    }).then(data => {
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(data.data)
-      }) 
+  _fetchData(page){
+    this.setState({
+      isLoadingTail: true
     })
-
-
+    request.get(`${Config.api.base}${Config.api.creations}`, {
+      accessToken: 'aaa',
+      page: page
+    }).then(data => {
+      if(data.success){
+        let items = cachedRes.items.slice()
+        items = items.concat(data.data)
+        cachedRes.items = items
+        cachedRes.total = data.total
+        setTimeout(() => {
+          this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(cachedRes.items),
+            isLoadingTail: false
+          }) 
+        }, 5000)
+      }
+    }).catch(e => {
+      this.setState({
+        isLoadingTail: false
+      }) 
+      console.log(e)
+    })
   }
+
+  _hasMore(){
+    return cachedRes.items.length !== cachedRes.total
+  }
+
+  _fetchMoreData(){
+    if(!this._hasMore() || this.state.isLoadingTail){
+      return 
+    }
+    let page = cachedRes.page
+    this._fetchData(page)
+  }
+
+  _renderFooter(){
+    if(!this._hasMore()){
+      return(
+        <View style={styles.loadingMore}>
+          <Text style={styles.loadingText}>没有更多数据</Text>
+        </View>
+      )
+    }else{
+      return(
+        <ActivityIndicator
+          style={styles.loadingMore}
+        />
+      )
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -86,9 +140,12 @@ class List extends Component {
         </View>
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={this.renderRow}
+          renderRow={this._renderRow}
           enableEmptySections={true}
           automaticallyAdjustContentInsets={false}
+          onEndReached={this._fetchMoreData}
+          onEndReachedThreshould={20}
+          renderFooter={this._renderFooter}
         />
       </View>
     );
@@ -165,6 +222,13 @@ const styles = StyleSheet.create({
   commentIcon:{
     fontSize: 22,
     color: '#333'
+  },
+  loadingMore:{
+    marginVertical: 20
+  },
+  loadingText: {
+    color: '#777',
+    textAlign: 'center'
   }
 })
 
