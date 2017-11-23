@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ListView, TouchableHighlight, Image, Dimensions, ActivityIndicator, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, ListView, TouchableHighlight, Image, Dimensions, ActivityIndicator, RefreshControl, Alert, AlertIOS } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import request from '../common/fetch'
 import Config from "../common/config";
@@ -10,6 +10,82 @@ let cachedRes = {
   nextPage: 1,
   items: [],
   total: 0
+}
+
+class Item extends Component {
+  constructor(props) {
+    super(props);
+    this._up = this._up.bind(this)
+    this.state = {
+      up: this.props.up
+    };
+  }
+
+  _up() {
+    let up = !this.state.up
+    let row = this.props.row
+    let url = Config.api.base + Config.api.up
+    let body = {
+      id: row.id,
+      up: up ? 'yes' : 'no',
+      accessToken: 'abc'
+    }
+    request.post(url, body).then(data => {
+      if(data && data.success){
+        this.setState({
+          up: up
+        })
+      }else{
+        AlertIOS.alert('点赞失败')
+      }
+    }).catch(e => {
+      console.log(e)
+      AlertIOS.alert('点赞失败')
+    })
+  }
+
+  render() {
+    let row = this.props.row
+    return(
+      <TouchableHighlight>
+        <View style={styles.item}>
+          <Text style={styles.title}>{row.title}</Text>
+          <Image
+            source={{uri: row.thumb}}
+            style={styles.thumb}
+          />
+          <Icon 
+              name='ios-play'
+              size={28}
+              style={styles.play}
+            />
+          <View style={styles.itemFooter}>
+            <View style={styles.handleBox}>
+              <Icon
+                name={this.state.up ? 'ios-heart' : 'ios-heart-outline'}
+                size={28}
+                onPress={this._up}
+                style={[styles.up, this.state.up ? null : styles.down]}
+              />
+              <Text style={styles.handleText} onPress={this._up}>
+                喜欢
+              </Text>
+            </View>
+            <View style={styles.handleBox}>
+              <Icon
+                name="ios-chatboxes-outline"
+                size={28}
+                style={styles.commentIcon}
+              />
+              <Text style={styles.handleText}>
+                评论
+              </Text>
+            </View>
+          </View>
+        </View>
+      </TouchableHighlight>
+    )
+  }
 }
 
 class List extends Component {
@@ -34,44 +110,7 @@ class List extends Component {
   }
 
   _renderRow(row){
-    return(
-      <TouchableHighlight>
-        <View style={styles.item}>
-          <Text style={styles.title}>{row.title}</Text>
-          <Image
-            source={{uri: row.thumb}}
-            style={styles.thumb}
-          />
-          <Icon 
-              name='ios-play'
-              size={28}
-              style={styles.play}
-            />
-          <View style={styles.itemFooter}>
-            <View style={styles.handleBox}>
-              <Icon
-                name="ios-heart-outline"
-                size={28}
-                style={styles.up}
-              />
-              <Text style={styles.handleText}>
-                喜欢
-              </Text>
-            </View>
-            <View style={styles.handleBox}>
-              <Icon
-                name="ios-chatboxes-outline"
-                size={28}
-                style={styles.commentIcon}
-              />
-              <Text style={styles.handleText}>
-                评论
-              </Text>
-            </View>
-          </View>
-        </View>
-      </TouchableHighlight>
-    )
+    return <Item row={row} up={false}/>
   }
 
   componentDidMount(){
@@ -261,6 +300,10 @@ const styles = StyleSheet.create({
     color: '#333'
   },
   up: {
+    fontSize: 22,
+    color: '#eb7566'
+  },
+  down: {
     fontSize: 22,
     color: '#333'
   },
