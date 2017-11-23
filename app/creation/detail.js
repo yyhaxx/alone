@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Video from 'react-native-video';
-// const NativeVideo = Video.default()
 
 let width = Dimensions.get('window').width
 
@@ -13,11 +12,16 @@ class Detail extends Component {
   state = {  }
   constructor(props) {
     super(props);
+    this._onProgress = this._onProgress.bind(this)
     this.state = {
       rate: 1,
       muted: true,
       resizeMode: 'contain',
-      repeat: false
+      repeat: false,
+      videoReady: false,
+      videoProgress: 0.01,
+      videoTotal: 0,
+      currentTime: 0
     };
   }
   _onLoadStart(){
@@ -27,8 +31,19 @@ class Detail extends Component {
     console.log('load')
   }
   _onProgress(data){
-    console.log(data)
-    console.log('progress')
+    if(!this.state.videoReady){
+      this.setState({
+        videoReady: true
+      })
+    }
+    let duration = data.playableDuration
+    let currentTime = data.currentTime
+    let percent = Number((currentTime / duration).toFixed(2))
+    this.setState({
+      videoTotal: duration,
+      currentTime: Number(data.currentTime.toFixed(2)), 
+      videoProgress: percent
+    })
   }
   _onEnd(){
     console.log('end')
@@ -59,6 +74,14 @@ class Detail extends Component {
             onEnd={this._onEnd}
             onError={this._onError}
           />
+          {
+            !this.state.videoReady && <ActivityIndicator
+              style={styles.loading}
+            />
+          }
+          <View style={styles.progressBox}>
+            <View style={[styles.progressBar, {width: width * this.state.videoProgress}]}></View>
+          </View>
         </View>
       </View>
     );
@@ -68,8 +91,6 @@ class Detail extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#f5fcff'
   },
   videoBox: {
@@ -81,6 +102,24 @@ const styles = StyleSheet.create({
     width: width,
     height: 360,
     backgroundColor: '#000'
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    top: 140,
+    width: width,
+    alignSelf: 'center',
+    backgroundColor: 'transparent'
+  },
+  progressBox: {
+    width: width,
+    height: 2,
+    backgroundColor: '#ccc',
+  },
+  progressBar: {
+    width: 1,
+    height: 2, 
+    backgroundColor: '#ff6600'
   }
 })
 
