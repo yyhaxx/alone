@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import { View, Text, TabBarIOS, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { StackNavigator } from 'react-navigation';
 
 import List from './app/creation'
+import Detail from './app/creation/detail'
 import Edit from './app/edit'
 import Account from './app/account'
 
 class App extends Component {
+  static navigationOptions = {
+    title: 'alone',
+  };
   constructor(props){
     super(props)
     this.state = {
@@ -17,8 +22,8 @@ class App extends Component {
   state = { 
     goddess: 'xiaoxi',
   }
-
   render() {
+    const {navigate} = this.props.navigation
     return (
     <TabBarIOS>
       <Icon.TabBarItem 
@@ -32,7 +37,7 @@ class App extends Component {
           })
         }}
       >
-        <List/>
+        <List navigate={navigate}/>
       </Icon.TabBarItem>
       <Icon.TabBarItem 
         title="编辑页面"
@@ -74,4 +79,11 @@ const styles = StyleSheet.create({
   }
 })
 
-export default App;
+export default StackNavigator({
+  App: {
+    screen: App
+  },
+  Detail: {
+    screen: Detail
+  }
+})

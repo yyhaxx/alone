@@ -46,8 +46,9 @@ class Item extends Component {
 
   render() {
     let row = this.props.row
+    const navigate = this.props.navigate    
     return(
-      <TouchableHighlight>
+      <TouchableHighlight onPress={() => {navigate('Detail', {data: row})}}>
         <View style={styles.item}>
           <Text style={styles.title}>{row.title}</Text>
           <Image
@@ -97,6 +98,7 @@ class List extends Component {
     this._fetchMoreData = this._fetchMoreData.bind(this)
     this._renderFooter = this._renderFooter.bind(this)
     this._onRefresh = this._onRefresh.bind(this)
+    this._renderRow = this._renderRow.bind(this)
     let ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => {
         return r1 != r2
@@ -110,7 +112,12 @@ class List extends Component {
   }
 
   _renderRow(row){
-    return <Item row={row} up={false}/>
+    const navigate = this.props.navigate
+    return <Item 
+      row={row} 
+      up={false}
+      navigate={navigate}
+    />
   }
 
   componentDidMount(){
@@ -210,9 +217,6 @@ class List extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>列表页面</Text>
-        </View>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={this._renderRow}
