@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ListView, TouchableHighlight, Image, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ListView, TouchableHighlight, Image, Dimensions, ActivityIndicator, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import request from '../common/fetch'
 import Config from "../common/config";
@@ -20,6 +20,7 @@ class List extends Component {
     super(props)
     this._fetchMoreData = this._fetchMoreData.bind(this)
     this._renderFooter = this._renderFooter.bind(this)
+    this._onRefresh = this._onRefresh.bind(this)
     let ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => {
         return r1 != r2
@@ -28,6 +29,7 @@ class List extends Component {
     this.state = {
       dataSource: ds.cloneWithRows([]),
       isLoadingTail: false,
+      isRefreshing: false
     }
   }
 
@@ -77,35 +79,60 @@ class List extends Component {
   }
 
   _fetchData(page){
-    this.setState({
-      isLoadingTail: true
-    })
+    if(page != 0 ){
+      this.setState({
+        isLoadingTail: true
+      })
+    }else{
+      this.setState({
+        isRefreshing: true 
+      })
+    }
     request.get(`${Config.api.base}${Config.api.creations}`, {
       accessToken: 'aaa',
       page: page
     }).then(data => {
       if(data.success){
         let items = cachedRes.items.slice()
-        items = items.concat(data.data)
+        if(page != 0){
+          items = items.concat(data.data)
+          cachedRes.nextPage += 1        
+        }else{
+          items = data.data.concat(items)
+        }
         cachedRes.items = items
         cachedRes.total = data.total
         setTimeout(() => {
           this.setState({
             dataSource: this.state.dataSource.cloneWithRows(cachedRes.items),
-            isLoadingTail: false
-          }) 
-        }, 5000)
+          })
+          if(page != 0 ){
+            this.setState({
+              isLoadingTail: false,
+            })
+          }else{
+            this.setState({
+              isRefreshing: false 
+            })
+          }
+        }, 2000) 
       }
     }).catch(e => {
-      this.setState({
-        isLoadingTail: false
-      }) 
+      if(page != 0 ){
+        this.setState({
+          isLoadingTail: false,
+        })
+      }else{
+        this.setState({
+          isRefreshing: false 
+        })
+      } 
       console.log(e)
     })
   }
 
   _hasMore(){
-    return cachedRes.items.length !== cachedRes.total
+    return cachedRes.items.length < cachedRes.total
   }
 
   _fetchMoreData(){
@@ -116,13 +143,22 @@ class List extends Component {
     this._fetchData(page)
   }
 
+  _onRefresh(){
+    if(!this._hasMore() || this.state.isRefreshing){
+      return 
+    }
+    this._fetchData(0)
+  }
+
   _renderFooter(){
-    if(!this._hasMore()){
+    if(!this._hasMore() && cachedRes.total != 0){
       return(
         <View style={styles.loadingMore}>
           <Text style={styles.loadingText}>没有更多数据</Text>
         </View>
       )
+    }else if(!this.state.isLoadingTail){
+      return <View style={styles.loadingMore} />
     }else{
       return(
         <ActivityIndicator
@@ -146,6 +182,15 @@ class List extends Component {
           onEndReached={this._fetchMoreData}
           onEndReachedThreshould={20}
           renderFooter={this._renderFooter}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={this._onRefresh}
+              tintColor="#ff6600"
+              title="拼命加载中。。。"
+            />
+          }  
         />
       </View>
     );
