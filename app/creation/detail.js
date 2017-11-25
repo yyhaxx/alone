@@ -14,6 +14,7 @@ class Detail extends Component {
     super(props);
     this._onProgress = this._onProgress.bind(this)
     this._rePlay = this._rePlay.bind(this)
+    this._onEnd = this._onEnd.bind(this)
     this.state = {
       rate: 1,
       muted: true,
