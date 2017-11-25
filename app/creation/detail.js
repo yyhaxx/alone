@@ -13,15 +13,17 @@ class Detail extends Component {
   constructor(props) {
     super(props);
     this._onProgress = this._onProgress.bind(this)
+    this._rePlay = this._rePlay.bind(this)
     this.state = {
       rate: 1,
       muted: true,
       resizeMode: 'contain',
       repeat: false,
-      videoReady: false,
+      videoLoaded: false,
       videoProgress: 0.01,
       videoTotal: 0,
-      currentTime: 0
+      currentTime: 0,
+      playing: false
     };
   }
   _onLoadStart(){
@@ -31,35 +33,42 @@ class Detail extends Component {
     console.log('load')
   }
   _onProgress(data){
-    if(!this.state.videoReady){
-      this.setState({
-        videoReady: true
-      })
-    }
     let duration = data.playableDuration
     let currentTime = data.currentTime
     let percent = Number((currentTime / duration).toFixed(2))
-    this.setState({
+    let newState = {
       videoTotal: duration,
       currentTime: Number(data.currentTime.toFixed(2)), 
       videoProgress: percent
-    })
+    }
+    if (!this.state.videoLoaded) {
+      newState.videoLoaded  = true
+    }
+    if (!this.state.playing) {
+      newState.playing = true
+    }
+    this.setState(newState)
   }
   _onEnd(){
-    console.log('end')
+    this.setState({
+      videoProgress: 1,
+      playing: false
+    })
   }
   _onError(e){
     console.log(e)
     console.log('error')
   }
+  _rePlay() {
+    this.refs.videoPlayer.seek(0)
+  }
   render() {
     const {params} = this.props.navigation.state
-    console.log(params)
     return (
       <View style={styles.container}>
         <View style={styles.VideoBox}>
           <Video
-            ref='VideoPlayer'
+            ref='videoPlayer'
             source={{uri: params.data.video}}
             style={styles.video}
             volume={5}
@@ -75,8 +84,16 @@ class Detail extends Component {
             onError={this._onError}
           />
           {
-            !this.state.videoReady && <ActivityIndicator
+            !this.state.videoLoaded && <ActivityIndicator
               style={styles.loading}
+            />
+          }
+          {
+            (this.state.videoLoaded && !this.state.playing) && <Icon
+              onPress={this._rePlay}
+              name='ios-play'
+              style={styles.playIcon}
+              size={48}
             />
           }
           <View style={styles.progressBox}>
@@ -120,6 +137,20 @@ const styles = StyleSheet.create({
     width: 1,
     height: 2, 
     backgroundColor: '#ff6600'
+  },
+  playIcon: {
+    position: 'absolute',
+    top: 140,
+    left: width / 2 - 30,
+    width: 60,
+    height: 60,
+    paddingTop: 6,
+    paddingLeft: 22,
+    backgroundColor: 'transparent',
+    borderColor: '#fff',
+    borderWidth: 1,
+    borderRadius: 30,
+    color: '#ed7b66'
   }
 })
 
