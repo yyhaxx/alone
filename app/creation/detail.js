@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, ActivityIndicator, TouchableOpacity, ScrollView, Image, } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Video from 'react-native-video';
 
@@ -7,7 +7,7 @@ let width = Dimensions.get('window').width
 
 class Detail extends Component {
   static navigationOptions = {
-    title: '视频细节',
+    title: '视频详情',
   };
   state = {  }
   constructor(props) {
@@ -147,6 +147,27 @@ class Detail extends Component {
             <View style={[styles.progressBar, {width: width * this.state.videoProgress}]}></View>
           </View>
         </View>
+        <ScrollView
+          automaticallyAdjustContentInsets={false}
+          enableEmptySections={true}
+          automaticallyAdjustContentInsets={false}
+          style={styles.scrollView}
+        >
+          <View
+            style={styles.infoBox}
+          >
+            <Image 
+              style={styles.avatar}
+              source={{uri: params.data.author.avatar}}
+            />
+            <View
+              style={styles.descBox}
+            >
+              <Text style={styles.nickname}>{params.data.author.nickname}</Text>
+              <Text style={styles.title}>{params.data.title}</Text>
+            </View>
+          </View>
+        </ScrollView>
       </View>
     );
   }
@@ -229,6 +250,30 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: 'transparent',
     color: '#fff'
+  },
+  infoBox: {
+    width: width,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10
+  },
+  avatar: {
+    width: 60,
+    height: 60,
+    marginRight: 10,
+    marginLeft: 10,
+    borderRadius: 30
+  },
+  descBox: {
+    flex: 1
+  },
+  nickname: {
+    fontSize: 18
+  },
+  title: {
+    marginTop: 8,
+    fontSize: 16,
+    color: '#666'
   }
 })
 

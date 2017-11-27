@@ -46,6 +46,7 @@ class Item extends Component {
 
   render() {
     let row = this.props.row
+    console.log(row)
     const navigate = this.props.navigate    
     return(
       <TouchableHighlight onPress={() => {navigate('Detail', {data: row})}}>
