@@ -17,6 +17,7 @@ class Detail extends Component {
     this._onEnd = this._onEnd.bind(this)
     this._pause = this._pause.bind(this)
     this._resume = this._resume.bind(this)
+    this._onError = this._onError.bind(this)
     this.state = {
       rate: 1,
       muted: true,
@@ -28,7 +29,8 @@ class Detail extends Component {
       currentTime: 0,
       playing: false,
       isEnd: false,
-      paused: false
+      paused: false,
+      videoOk: true
     };
   }
   _onLoadStart(){
@@ -63,7 +65,9 @@ class Detail extends Component {
   }
   _onError(e){
     console.log(e)
-    console.log('error')
+    this.setState({
+      videoOk: false
+    })
   }
   _rePlay() {
     this.refs.videoPlayer.seek(0)
@@ -106,6 +110,11 @@ class Detail extends Component {
             onEnd={this._onEnd}
             onError={this._onError}
           />
+          {
+            !this.state.videoOk && <Text style={styles.failText}>
+              视频出错了
+            </Text>
+          }
           {
             !this.state.videoLoaded && <ActivityIndicator
               style={styles.loading}
@@ -211,6 +220,15 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     color: '#ed7b66',
     alignSelf: 'center'
+  },
+  failText: {
+    position: 'absolute',
+    left: 0,
+    top: 180,
+    width: width,
+    textAlign: 'center',
+    backgroundColor: 'transparent',
+    color: '#fff'
   }
 })
 
