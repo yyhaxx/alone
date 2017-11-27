@@ -24,7 +24,8 @@ class Detail extends Component {
       videoProgress: 0.01,
       videoTotal: 0,
       currentTime: 0,
-      playing: false
+      playing: false,
+      isEnd: false
     };
   }
   _onLoadStart(){
@@ -45,7 +46,7 @@ class Detail extends Component {
     if (!this.state.videoLoaded) {
       newState.videoLoaded  = true
     }
-    if (!this.state.playing) {
+    if (!this.state.playing && !this.state.isEnd) {
       newState.playing = true
     }
     this.setState(newState)
@@ -53,7 +54,8 @@ class Detail extends Component {
   _onEnd(){
     this.setState({
       videoProgress: 1,
-      playing: false
+      playing: false,
+      isEnd: true
     })
   }
   _onError(e){
@@ -62,6 +64,9 @@ class Detail extends Component {
   }
   _rePlay() {
     this.refs.videoPlayer.seek(0)
+    this.setState({
+      playing: true 
+    })
   }
   render() {
     const {params} = this.props.navigation.state
@@ -90,13 +95,14 @@ class Detail extends Component {
             />
           }
           {
-            (this.state.videoLoaded && !this.state.playing) && <Icon
+            this.state.videoLoaded && !this.state.playing && <Icon
               onPress={this._rePlay}
               name='ios-play'
               style={styles.playIcon}
               size={48}
             />
           }
+
           <View style={styles.progressBox}>
             <View style={[styles.progressBar, {width: width * this.state.videoProgress}]}></View>
           </View>
