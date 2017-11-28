@@ -9,6 +9,7 @@ module.exports = {
   api: {
     base: 'http://rap.taobao.org/mockjs/29140/',
     creations: 'api/creations',
-    up: 'api/up'
+    up: 'api/up',
+    comment: 'api/comments'
   }
 }
