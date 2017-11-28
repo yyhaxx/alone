@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ListView, TouchableHighlight, Image, Dimensions
 import Icon from 'react-native-vector-icons/Ionicons';
 import request from '../common/fetch'
 import Config from "../common/config";
-import { setTimeout } from 'core-js/library/web/timers';
 
 let width = Dimensions.get('window').width
 let cachedRes = {
@@ -148,20 +147,18 @@ class List extends Component {
         }
         cachedRes.items = items
         cachedRes.total = data.total
-        setTimeout(() => {
+        this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(cachedRes.items),
+        })
+        if(page != 0 ){
           this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(cachedRes.items),
+            isLoadingTail: false,
           })
-          if(page != 0 ){
-            this.setState({
-              isLoadingTail: false,
-            })
-          }else{
-            this.setState({
-              isRefreshing: false 
-            })
-          }
-        }, 2000) 
+        }else{
+          this.setState({
+            isRefreshing: false 
+          })
+        } 
       }
     }).catch(e => {
       if(page != 0 ){
@@ -188,7 +185,6 @@ class List extends Component {
     let page = cachedRes.page
     this._fetchData(page)
   }
-
   _onRefresh(){
     if(!this._hasMore() || this.state.isRefreshing){
       return 

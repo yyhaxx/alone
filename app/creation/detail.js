@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions, ActivityIndicator, TouchableOpacity, ScrollView, Image, ListView } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, ActivityIndicator, TouchableOpacity, Image, ListView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Video from 'react-native-video';
 import request from '../common/fetch';
@@ -115,7 +115,7 @@ class Detail extends Component {
     })
     request.get(`${Config.api.base}${Config.api.comment}`, {
       accessToken: 'aaa',
-      id: '123',
+      creation: '123',
       page: page
     }).then(data => {
       if(data.success){
@@ -124,14 +124,12 @@ class Detail extends Component {
         cachedRes.nextPage += 1        
         cachedRes.items = items
         cachedRes.total = data.total
-        setTimeout(() => {
-          this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(cachedRes.items),
-          })
-          this.setState({
-            isLoadingTail: false,
-          })
-        }, 2000) 
+        this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(cachedRes.items),
+        })
+        this.setState({
+          isLoadingTail: false,
+        })
       }
     }).catch(e => {
       this.setState({
@@ -209,7 +207,7 @@ class Detail extends Component {
     const {params} = this.props.navigation.state
     return (
       <View style={styles.container}>
-        <View style={styles.VideoBox}>
+        <View style={styles.videoBox}>
           <Video
             ref='videoPlayer'
             source={{uri: params.data.video}}
