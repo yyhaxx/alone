@@ -6,6 +6,11 @@ import request from '../common/fetch';
 import Config from "../common/config";
 
 let width = Dimensions.get('window').width
+let cachedRes = {
+  nextPage: 1,
+  items: [],
+  total: 0
+}
 
 class Detail extends Component {
   static navigationOptions = {
@@ -20,6 +25,10 @@ class Detail extends Component {
     this._pause = this._pause.bind(this)
     this._resume = this._resume.bind(this)
     this._onError = this._onError.bind(this)
+    this._hasMore = this._hasMore.bind(this)
+    this._fetchMoreData = this._fetchMoreData.bind(this)
+    this._renderFooter = this._renderFooter.bind(this)
+    this._renderHeader = this._renderHeader.bind(this)
     let ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => {
         return r1 != r2
@@ -100,24 +109,82 @@ class Detail extends Component {
   componentDidMount() {
     this._fetchData()
   }
-  _fetchData(){
-    let url = Config.api.base + Config.api.comment
-    request.get(url, {
-      id: 123,
-      accessToken: '122'
+  _fetchData(page){
+    this.setState({
+      isLoadingTail: true
+    })
+    request.get(`${Config.api.base}${Config.api.comment}`, {
+      accessToken: 'aaa',
+      id: '123',
+      page: page
     }).then(data => {
-      if(data && data.success){
-        let comments = data.data
-        if (comments && comments.length > 0) {
+      if(data.success){
+        let items = cachedRes.items.slice()
+        items = items.concat(data.data)
+        cachedRes.nextPage += 1        
+        cachedRes.items = items
+        cachedRes.total = data.total
+        setTimeout(() => {
           this.setState({
-            comments: comments,
-            dataSource: this.state.dataSource.cloneWithRows(comments)
+            dataSource: this.state.dataSource.cloneWithRows(cachedRes.items),
           })
-        }
+          this.setState({
+            isLoadingTail: false,
+          })
+        }, 2000) 
       }
     }).catch(e => {
+      this.setState({
+        isLoadingTail: false,
+      })
       console.log(e)
     })
+  }
+  _hasMore(){
+    return cachedRes.items.length < cachedRes.total
+  }
+  _fetchMoreData(){
+    if(!this._hasMore() || this.state.isLoadingTail){
+      return 
+    }
+    let page = cachedRes.page
+    this._fetchData(page)
+  }
+  _renderFooter(){
+    if(!this._hasMore() && cachedRes.total != 0){
+      return(
+        <View style={styles.loadingMore}>
+          <Text style={styles.loadingText}>没有更多数据</Text>
+        </View>
+      )
+    }else if(!this.state.isLoadingTail){
+      return <View style={styles.loadingMore} />
+    }else{
+      return(
+        <ActivityIndicator
+          style={styles.loadingMore}
+        />
+      )
+    }
+  }
+  _renderHeader(){
+    const {params} = this.props.navigation.state
+    return(
+      <View
+        style={styles.infoBox}
+      >
+        <Image 
+          style={styles.avatar}
+          source={{uri: params.data.author.avatar}}
+        />
+        <View
+          style={styles.descBox}
+        >
+          <Text style={styles.nickname}>{params.data.author.nickname}</Text>
+          <Text style={styles.title}>{params.data.title}</Text>
+        </View>
+      </View>
+    )
   }
   _renderRow(row){
     return (
@@ -196,34 +263,17 @@ class Detail extends Component {
             <View style={[styles.progressBar, {width: width * this.state.videoProgress}]}></View>
           </View>
         </View>
-        <ScrollView
-          automaticallyAdjustContentInsets={false}
-          enableEmptySections={true}
-          automaticallyAdjustContentInsets={false}
-          style={styles.scrollView}
-        >
-          <View
-            style={styles.infoBox}
-          >
-            <Image 
-              style={styles.avatar}
-              source={{uri: params.data.author.avatar}}
-            />
-            <View
-              style={styles.descBox}
-            >
-              <Text style={styles.nickname}>{params.data.author.nickname}</Text>
-              <Text style={styles.title}>{params.data.title}</Text>
-            </View>
-          </View>
-          <ListView
-          dataSource={this.state.dataSource}
-          renderRow={this._renderRow}
-          enableEmptySections={true}
-          automaticallyAdjustContentInsets={false}
-          showsVerticalScrollIndicator={false}  
-          />
-        </ScrollView>
+        <ListView
+        dataSource={this.state.dataSource}
+        renderRow={this._renderRow}
+        enableEmptySections={true}
+        automaticallyAdjustContentInsets={false}
+        showsVerticalScrollIndicator={false}  
+        onEndReached={this._fetchMoreData}
+        onEndReachedThreshould={20}
+        renderFooter={this._renderFooter}
+        renderHeader={this._renderHeader}
+        />
       </View>
     );
   }
@@ -352,6 +402,13 @@ const styles = StyleSheet.create({
   },
   reply: {
     flex: 1
+  },
+  loadingMore:{
+    marginVertical: 20
+  },
+  loadingText: {
+    color: '#777',
+    textAlign: 'center'
   }
 })
 
