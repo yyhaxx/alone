@@ -6,7 +6,7 @@ import { StackNavigator } from 'react-navigation';
 import List from './app/creation'
 import Detail from './app/creation/detail'
 import Edit from './app/edit'
-import Account from './app/account'
+import Login from './app/account/login'
 
 class App extends Component {
   static navigationOptions = {
@@ -56,14 +56,14 @@ class App extends Component {
         title="我的账户"
         iconName='ios-more-outline'
         selectedIconName='ios-more'
-        selected={this.state.selectedTab === 'account'}
+        selected={this.state.selectedTab === 'login'}
         onPress={() => {
           this.setState({
-            selectedTab: 'account'
+            selectedTab: 'login'
           })
         }}
       >
-        <Account/>
+        <Login/>
       </Icon.TabBarItem>
     </TabBarIOS>
     );
