@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, AlertIOS  } from 'react-native';
+import { View, Text, StyleSheet, TextInput, AlertIOS  } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import request from "../common/fetch";
 import Config from "../common/config";
+import Button from 'react-native-button';
 
 class Login extends Component {
   state = {  }
@@ -83,14 +84,12 @@ class Login extends Component {
           }
           {
             this.state.codeSent ? <Button
-              style={styles.btn1}
+              style={styles.btn}
               onPress={this._submit}
-              title="登录"
-            /> : <Button
-              title="获取验证码"
-              style={styles.btn1}
+            >登录</Button>: <Button
+              style={styles.btn}
               onPress={this._sendVerifyCode}
-            />
+            >获取验证码</Button>
           }
         </View>
       </View>
@@ -114,18 +113,19 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   inputField: {
-    flex: 1,
-    // height: 100,
+    // flex: 1,
+    height: 40,
     padding: 5,
     color: '#666',
     fontSize: 16,
     backgroundColor: '#fff',
-    borderRadius: 4
+    borderRadius: 4,
+    marginBottom: 10
   },
-  btn1: {
+  btn: {
     padding: 10,
     marginTop: 10,
-    // backgroundColor: 'transparent',
+    backgroundColor: 'red',
     borderColor: '#ee735c',
     borderWidth: 1,
     borderRadius: 4,
