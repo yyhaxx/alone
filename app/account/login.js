@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput, AlertIOS  } from 'react-native';
+import { View, Text, StyleSheet, TextInput, AlertIOS, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import request from "../common/fetch";
 import Config from "../common/config";
 import Button from 'react-native-button';
+import CountdownView from 'rn-countdown';
 
 class Login extends Component {
   state = {  }
@@ -48,6 +49,8 @@ class Login extends Component {
 
   }
   render() {
+    const style = this.state.hasText ? {backgroundColor: 'rgb(59, 197, 81)', borderWidth: 0} : {};
+    const title = this.state.hasText ? {color: '#fff'} : {};
     return (
       <View style={styles.container}>
         <View style={styles.signupBox}>
@@ -56,7 +59,7 @@ class Login extends Component {
             placeholder="请输入手机号"
             autoCaptialize={'none'}
             autoCorrect={false}
-            keyboradType='number-pad'
+            keyboardType='number-pad'
             style={styles.inputField}
             onChangeText={(text) => {
               this.setState({
@@ -72,14 +75,34 @@ class Login extends Component {
                 placeholder="请输入验证码"
                 autoCaptialize={'none'}
                 autoCorrect={false}
-                keyboradType='number-pad'
-                style={styles.inputField}
+                keyboardType='number-pad'
+                style={styles.codeInputField}
                 onChangeText={(text) => {
                   this.setState({
                     verifyCode: text
                   })
                 }}
               />
+              {
+                this.state.countingDone ? <Button
+                  style={styles.countBtn}
+                  onPress={
+                    this._sendVerifyCode
+                  }
+                >获取验证码</Button> : <CountdownView
+                  ref={r => this.countdown = r}
+                  time={60}
+                  title="发送验证码"
+                  overTitle="重新发送"
+                  style={[styles.countdown, style]}
+                  titleStyle={[styles.countdownTitle, title]}
+                  countingTitleTemplate="发送中({time})"
+                  countingStyle={styles.countingdown}
+                  countingTitleStyle={styles.countingTitle}
+                  shouldStartCountdown={this.shouldStartCountdown}
+                  onNetworkFailed={this.handleNetworkFailed}
+                />
+              }
             </View>
           }
           {
@@ -115,7 +138,7 @@ const styles = StyleSheet.create({
   inputField: {
     // flex: 1,
     height: 40,
-    padding: 5,
+    padding: 10,
     color: '#666',
     fontSize: 16,
     backgroundColor: '#fff',
@@ -130,7 +153,35 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     color: '#ee735c'
-  }
+  },
+  verifyCodeBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 10,
+    height: 40,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: '#ebebeb',
+    width: Dimensions.get('window').width,
+    backgroundColor: '#fff'
+  },
+  codeInputField: {
+    width: Dimensions.get('window').width * 0.6,
+    height: 40,
+    lineHeight: 40,
+    color: '#666',
+    fontSize: 16,
+  },
+  countdown: {
+    borderRadius: 15,
+    backgroundColor: '#777',
+  },
+  countingdown: {
+    backgroundColor: 'transparent',
+    borderWidth: StyleSheet.hairlineWidth
+  },
+  countdownTitle: {color: '#ccc'},
+  countingTitle: {color: '#ccc'}
 })
 
 export default Login;
