@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: '#ebebeb',
-    width: Dimensions.get('window').width,
+    width: Dimensions.get('window').width - 20,
     backgroundColor: '#fff'
   },
   codeInputField: {
